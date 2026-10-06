@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TruthLens | Fake News Detector</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>Truth<span>Lens</span></h1>
+                <p>Paste a news link or type a headline to detect its authenticity.</p>
+            </header>
+
+            <main>
+                <form id="detectorForm">
+                    <div class="input-group">
+                        <input type="radio" id="type-url" name="inputType" value="url" checked />
+                        <label for="type-url">Article Link (URL)</label>
+                        <input type="radio" id="type-text" name="inputType" value="text" />
+                        <label for="type-text">Headline / Text</label>
+                    </div>
+
+                    <textarea id="userInput" placeholder="https://example.com/news-article..." required></textarea>
+
+                    <button type="submit" id="submitBtn">
+                        <span id="btnText">Analyze Now</span>
+                        <span id="loader" class="hidden"></span>
+                    </button>
+                </form>
+
+                <div id="resultBox" class="result-box hidden">
+                    <h2>Verdict: <span id="verdict"></span></h2>
+                    <p id="confidenceLevel"></p>
+                </div>
+            </main>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
