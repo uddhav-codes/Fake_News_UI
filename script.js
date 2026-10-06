@@ -1,5 +1,5 @@
 // Configuration: Update this URL after deploying your Python backend
-const API_URL = "https://fake-news-backend-5yef.onrender.com";
+const API_URL = "https://fake-news-backend-5yef.onrender.com/predict";
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("detectorForm");
