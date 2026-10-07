@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!text) return;
 
         // UI Loading State
-        submitBtn.disabled = true;
-        btnText.classList.add("hidden");
-        loader.classList.remove("hidden");
-        resultBox.classList.add("hidden");
+        if (submitBtn) submitBtn.disabled = true;
+        if (btnText) btnText.classList.add("hidden");
+        if (loader) loader.classList.remove("hidden");
+        if (resultBox) resultBox.classList.add("hidden");
 
         try {
             const response = await fetch(API_URL, {
@@ -44,30 +44,38 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ type: type, content: text }),
             });
 
-            if (!response.ok) throw new Error("Server Error or Invalid URL");
-
             const data = await response.json();
 
-            // Display Results
-            verdictEl.textContent = data.prediction === "REAL" ? "REAL NEWS" : "FAKE NEWS";
-
-            // Apply Red/Green styling
-            verdictEl.className = ""; // Reset classes
-            if (data.prediction === "REAL") {
-                verdictEl.classList.add("text-real");
-            } else {
-                verdictEl.classList.add("text-fake");
+            if (!response.ok) {
+                throw new Error(data.error || "Server Error or Invalid URL");
             }
 
-            confidenceEl.textContent = data.message || "Analysis complete.";
-            resultBox.classList.remove("hidden");
+            // Normalize prediction value from either key format
+            const rawPrediction = (data.prediction || data.result || "").toUpperCase();
+            const isReal = rawPrediction === "REAL";
+
+            // Safely display Results
+            if (verdictEl) {
+                verdictEl.textContent = isReal ? "REAL NEWS" : "FAKE NEWS";
+                verdictEl.className = ""; // Reset classes
+                verdictEl.classList.add(isReal ? "text-real" : "text-fake");
+            }
+
+            if (confidenceEl) {
+                confidenceEl.textContent = data.message || "Analysis complete.";
+            }
+
+            if (resultBox) {
+                resultBox.classList.remove("hidden");
+            }
         } catch (error) {
-            alert("Error analyzing input. Ensure the URL is accessible or try text mode.");
+            console.error("Analysis pipeline error:", error);
+            alert(error.message || "Error analyzing input. Ensure the URL is accessible or try text mode.");
         } finally {
             // Restore UI State
-            submitBtn.disabled = false;
-            btnText.classList.remove("hidden");
-            loader.classList.add("hidden");
+            if (submitBtn) submitBtn.disabled = false;
+            if (btnText) btnText.classList.remove("hidden");
+            if (loader) loader.classList.add("hidden");
         }
     });
 });
